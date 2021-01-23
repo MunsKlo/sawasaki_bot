@@ -35,6 +35,9 @@ def get_all_members(parameters):
 
 
 def make_important_message(parameters):
+    if len(parameters) < 2:
+        return "Something went wrong"
+
     if parameters[1] == 'clear' and len(parameters) == 2:
         var.important_messages = []
         InputOutputJSON.write_json_file([], var.important_messages_file, True)
@@ -262,3 +265,8 @@ def get_quote(parameters):
                f"```{current_quote.quote}```"
 
     return "Something went wrong"
+
+
+def get_github(parameters):
+    return 'Check me out! :Swag_dog:' \
+           'https://github.com/MunsKlo/sawasaki_bot.git'

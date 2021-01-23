@@ -20,4 +20,5 @@ commandHandler = {
   'msg': comFunc.handle_notes,
   'stalk': comFunc.get_stalker,
   'quote': comFunc.get_quote,
+  'github': comFunc.get_github,
 }
