@@ -1,4 +1,4 @@
-import bot_logic.conditionsHandler
+import conditionsHandler
 
 
 def get_right_guild(guilds):

@@ -1,9 +1,9 @@
 import random
 import requests
-from variables import variables as var
-from data import InputOutputJSON
-from model import user, important_message, yt_vid, chuck_norris, quote
-from bot_logic import functions_bot
+import variables as var
+import InputOutputJSON
+import user, important_message, yt_vid, chuck_norris, quote
+import functions_bot
 
 
 def get_inspiro_pic(parameters):
@@ -124,19 +124,22 @@ def get_chuck_norris(parameters):
 
 
 def get_giphy_gif(parameters):
-    payload = {'api_key': 'AbKxlHYeNnK7yB9kDrF9gUmHMV9pbVOF', 'Content-Type': 'application/json', 'tag': ''}
-    json_dict = {'data': {'url': 'Something went wrong!'}}
+    try:
+        payload = {'api_key': 'AbKxlHYeNnK7yB9kDrF9gUmHMV9pbVOF', 'Content-Type': 'application/json', 'tag': ''}
+        json_dict = {'data': {'url': 'Something went wrong!'}}
 
-    if parameters[1] == 'random' and len(parameters) == 2:
-        response = requests.get('https://api.giphy.com/v1/gifs/random', params=payload)
-        json_dict = response.json()
+        if parameters[1] == 'random' and len(parameters) == 2:
+            response = requests.get('https://api.giphy.com/v1/gifs/random', params=payload)
+            json_dict = response.json()
 
-    if parameters[1] == 'random' and len(parameters) == 3:
-        payload['tag'] = parameters[2]
-        response = requests.get('https://api.giphy.com/v1/gifs/random', params=payload)
-        json_dict = response.json()
+        if parameters[1] == 'random' and len(parameters) == 3:
+            payload['tag'] = parameters[2]
+            response = requests.get('https://api.giphy.com/v1/gifs/random', params=payload)
+            json_dict = response.json()
 
-    return f'{json_dict["data"]["url"]}'
+        return f'{json_dict["data"]["url"]}'
+    except Exception as e:
+        return str(e)
 
 
 def get_advice(parameters):
@@ -270,3 +273,18 @@ def get_quote(parameters):
 def get_github(parameters):
     return 'Check me out! :Swag_dog:' \
            'https://github.com/MunsKlo/sawasaki_bot.git'
+
+
+def get_waifu(parameters):
+    if len(parameters) < 2:
+        return "Something went wrong"
+
+    if parameters[1] == 'raski':
+        return f'Misaki Tobisawa\n' \
+               f'{random.choice(var.pic_collection.r)}'
+
+    if parameters[1] == 'munsklo' or parameters[1] == 'klo':
+        return f'Klocke 4 eva\n' \
+               f'{random.choice(var.pic_collection.m)}'
+
+    return "Ask master MunsKlo for creating a instance for your waifu"

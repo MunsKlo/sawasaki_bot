@@ -1,4 +1,4 @@
-import bot_logic.command_functions as comFunc
+import command_functions as comFunc
 
 commandHandler = {
   "inspiro": comFunc.get_inspiro_pic,
@@ -21,4 +21,5 @@ commandHandler = {
   'stalk': comFunc.get_stalker,
   'quote': comFunc.get_quote,
   'github': comFunc.get_github,
+  'waifu': comFunc.get_waifu,
 }

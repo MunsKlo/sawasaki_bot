@@ -1,10 +1,11 @@
-import bot_logic.variables
-from model import user, important_message, yt_vid, quote
-from variables import variables as var
+import con_variables
+import user, important_message, yt_vid, quote
+import variables as var
+import glob
 
 
 def right_channel(channel):
-    return channel in bot_logic.variables.allowed_channels
+    return channel in bot_logic.con_variables.allowed_channels
 
 
 def get_command_from_content(text):
@@ -264,6 +265,12 @@ def get_titles(current_user):
 
 def set_cursor_to_begin():
     [current_user.set_cursor_to_start() for current_user in var.users]
+
+
+def get_images(path):
+    list_of_pics = glob.glob(path + '*.jpg')
+    list_of_pics += glob.glob(path + '*.png')
+    return list_of_pics
 
 
 

@@ -1,6 +1,7 @@
 .venv
 venv/
 venv.bak/
+pictures
 
 notes.txt
 important_messages.json
