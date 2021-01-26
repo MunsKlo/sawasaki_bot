@@ -62,7 +62,7 @@ def check_if_user_register(name, list):
     return user_exist
 
 
-def create_user(author):
+def create_new_user(author):
     return user.User(author.id, str(author), author.mention)
 
 

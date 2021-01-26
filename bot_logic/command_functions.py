@@ -137,7 +137,8 @@ def get_giphy_gif(parameters):
             response = requests.get('https://api.giphy.com/v1/gifs/random', params=payload)
             json_dict = response.json()
 
-        return f'{json_dict["data"]["url"]}'
+        return f'{str(parameters[0].author.mention)}:\n' \
+               f'{json_dict["data"]["url"]}'
     except Exception as e:
         return str(e)
 
@@ -283,8 +284,20 @@ def get_waifu(parameters):
         return f'Misaki Tobisawa\n' \
                f'{random.choice(var.pic_collection.r)}'
 
-    if parameters[1] == 'munsklo' or parameters[1] == 'klo':
+    if parameters[1] == 'munsklo' or parameters[1] == 'klo' or parameters[1] == 'klocke':
         return f'Klocke 4 eva\n' \
                f'{random.choice(var.pic_collection.m)}'
 
-    return "Ask master MunsKlo for creating a instance for your waifu"
+    if parameters[1] == 'yuzu':
+        return f'FrostNova\n' \
+               f'{random.choice(var.pic_collection.y)}'
+
+    if parameters[1] == 'lauri':
+        return f'RIP Teddy D:\n' \
+               f'{random.choice(var.pic_collection.l)}'
+
+    if parameters[1] == 'flocke' or parameters[1] == 'flo':
+        return f'Hinata Hyuuga\n' \
+               f'{random.choice(var.pic_collection.f)}'
+
+    return "Ask master MunsKlo for creating an instance for your waifu"

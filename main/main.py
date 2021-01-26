@@ -54,6 +54,9 @@ class MyClient(discord.Client):
 
         var.pic_collection.r = functions_bot.get_images(f'{path}/pictures/picCollection_w/r/')
         var.pic_collection.m = functions_bot.get_images(f'{path}/pictures/picCollection_w/m/')
+        var.pic_collection.y = functions_bot.get_images(f'{path}/pictures/picCollection_w/y/')
+        var.pic_collection.l = functions_bot.get_images(f'{path}/pictures/picCollection_w/l/')
+        var.pic_collection.f = functions_bot.get_images(f'{path}/pictures/picCollection_w/f/')
 
     # MessageSend
     async def on_message(self, message):
@@ -61,7 +64,7 @@ class MyClient(discord.Client):
             return
 
         if not functions_bot.check_if_user_register(str(message.author), var.users):
-            var.users.append(functions_bot.create_user(message.author))
+            var.users.append(functions_bot.create_new_user(message.author))
             InputOutputJSON.write_json_file(var.users, var.users_file)
 
         if message.content.startswith('.') or message.content.startswith('.@'):
@@ -72,6 +75,8 @@ class MyClient(discord.Client):
             parameter_list = functions_bot.get_parameter_list(message.content, message)
             print(parameter_list)
 
+            command = str(command).lower()
+
             if command in comHandler:
                 function = comHandler[command]
                 result = function(parameter_list)
@@ -81,7 +86,7 @@ class MyClient(discord.Client):
             if command == 'vid' and len(parameter_list) > 1 and parameter_list[1] == 'add':
                 await message.channel.purge(limit=1)
 
-            if len(bot_message) and command=='waifu':
+            if len(bot_message) and '\n' in bot_message and command=='waifu':
                 bot_messages = bot_message.split('\n')
                 await message.channel.send(bot_messages[0])
                 await message.channel.send(file=discord.File(bot_messages[1]))
