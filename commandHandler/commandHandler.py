@@ -1,4 +1,4 @@
-import command_functions as comFunc
+from bot_logic import command_functions as comFunc
 
 commandHandler = {
   "inspiro": comFunc.get_inspiro_pic,
@@ -9,7 +9,6 @@ commandHandler = {
   "users": comFunc.get_users,
   "vid": comFunc.get_youtube,
   "help": comFunc.get_commands,
-  "@": comFunc.make_important_message,
   "decision": comFunc.get_decision,
   "chucknorris": comFunc.get_chuck_norris,
   "giphy": comFunc.get_giphy_gif,
@@ -17,9 +16,10 @@ commandHandler = {
   "cat": comFunc.get_cat_pic,
   "dog": comFunc.get_dog_pic,
   "fox": comFunc.get_fox_pic,
-  'msg': comFunc.handle_notes,
   'stalk': comFunc.get_stalker,
   'quote': comFunc.get_quote,
   'github': comFunc.get_github,
   'waifu': comFunc.get_waifu,
+  'joke': comFunc.get_joke,
+  'husbando': comFunc.get_husbando
 }

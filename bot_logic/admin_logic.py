@@ -1,4 +1,4 @@
-import conditionsHandler
+from bot_logic import conditionsHandler
 
 
 def get_right_guild(guilds):
@@ -6,4 +6,4 @@ def get_right_guild(guilds):
         if guild.name == '5465616d':
             return guild
 
-    return bot_logic.conditionsHandler.error
+    return conditionsHandler.error

@@ -1,11 +1,6 @@
-import con_variables
-import user, important_message, yt_vid, quote
-import variables as var
+from model import user, important_message, yt_vid, quote
+from variables import variables as var
 import glob
-
-
-def right_channel(channel):
-    return channel in bot_logic.con_variables.allowed_channels
 
 
 def get_command_from_content(text):

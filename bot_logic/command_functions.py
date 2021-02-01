@@ -1,9 +1,9 @@
 import random
 import requests
-import variables as var
-import InputOutputJSON
-import user, important_message, yt_vid, chuck_norris, quote
-import functions_bot
+from variables import variables as var
+from data import InputOutputJSON
+from model import user, important_message, yt_vid, chuck_norris, quote
+from bot_logic import functions_bot
 
 
 def get_inspiro_pic(parameters):
@@ -31,33 +31,6 @@ def get_yes_or_no(parameters):
 def get_all_members(parameters):
     for member in parameters[0].guild.members:
         print(member)
-    return ''
-
-
-def make_important_message(parameters):
-    if len(parameters) < 2:
-        return "Something went wrong"
-
-    if parameters[1] == 'clear' and len(parameters) == 2:
-        var.important_messages = []
-        InputOutputJSON.write_json_file([], var.important_messages_file, True)
-        return 'Alle wichtigen Nachrichten wurden gelöscht'
-
-    elif parameters[1] == 'print' and len(parameters) == 2:
-        text = ''
-        for obj in var.important_messages:
-            text += f'{obj.user} schrieb: "{str(obj.message)}" in {obj.channel}\n'
-        if text == '':
-            text = 'Keine Nachrichten vorhanden'
-        return text
-
-    else:
-        message = parameters[0]
-        var.important_messages.append(
-            important_message.ImportantMessage(str(message.content)[3:len(message.content)], str(message.channel), str(message.author)))
-
-        InputOutputJSON.write_json_file(var.important_messages, var.important_messages_file)
-
     return ''
 
 
@@ -167,88 +140,6 @@ def get_fox_pic(parameters):
     return json_dict['image']
 
 
-def handle_notes(parameters):
-    result = ''
-
-    if len(parameters) < 2:
-        return 'There is no message or category!'
-
-    current_user = functions_bot.get_user(parameters[0].author.id)
-
-    if current_user == 'ERROR':
-        return 'User not found'
-
-    if parameters[1] == 'info':
-        result = functions_bot.info_msg_dir(current_user)
-
-    if parameters[1] == 'titles':
-        result = functions_bot.get_titles(current_user)
-
-    if parameters[1] == 'note':
-        cat_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        cat = functions_bot.cut_decisions(cat_string)[1:]
-
-        result = functions_bot.get_note(cat[0], current_user)
-
-    if parameters[1] == 'new' and parameters[2] == 'cat':
-        cat_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        cat = functions_bot.cut_decisions(cat_string)[2:]
-
-        if len(cat) != 1:
-            return 'Something went wrong'
-
-        if '/' in cat[0]:
-            return 'Keine / in Namen!'
-
-        result = functions_bot.create_category(cat[0], current_user)
-
-    if parameters[1] == 'del' and parameters[2] == 'cat':
-        cat_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        cat = functions_bot.cut_decisions(cat_string)[2:]
-
-        if len(cat) != 1:
-            return 'Something went wrong'
-
-        result = functions_bot.delete_category(cat[0], current_user)
-
-    if parameters[1] == 'new' and parameters[2] == 'msg':
-        msg_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        msg = functions_bot.cut_decisions(msg_string)[2:]
-
-        if len(msg) != 2:
-            return 'Something went wrong'
-
-        result = functions_bot.create_msg(msg[0], msg[1], current_user)
-
-    if parameters[1] == 'del' and parameters[2] == 'msg':
-        msg_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        msg = functions_bot.cut_decisions(msg_string)[2:]
-
-        if len(msg) != 1:
-            return 'Something went wrong'
-
-        result = functions_bot.delete_msg(msg[0], current_user)
-
-    if parameters[1] == 'purge':
-        var.msgs = {}
-        functions_bot.set_cursor_to_begin()
-        return 'Alle Notizen und Kategorien wurden gesäubert!'
-
-    if parameters[1] == 'cd':
-        cat_string = functions_bot.cut_parameters_from_command(str(parameters[0].content))
-        cat = functions_bot.cut_decisions(cat_string)[1:]
-
-        if len(cat) != 1:
-            return 'Something went wrong'
-
-        result = functions_bot.set_user_cursor(cat[0], current_user)
-
-    InputOutputJSON.write_json_file(var.msgs, var.msgs_file)
-    InputOutputJSON.write_json_file(var.users, var.users_file)
-
-    return result
-
-
 def get_stalker(parameters):
     current_user = functions_bot.get_user(716737561791299654)
     if current_user == 'ERROR':
@@ -280,11 +171,17 @@ def get_waifu(parameters):
     if len(parameters) < 2:
         return "Something went wrong"
 
+    parameters[1] = parameters[1].lower()
+
     if parameters[1] == 'raski':
         return f'Misaki Tobisawa\n' \
                f'{random.choice(var.pic_collection.r)}'
 
-    if parameters[1] == 'munsklo' or parameters[1] == 'klo' or parameters[1] == 'klocke':
+    if parameters[1] == 'munsklo' or parameters[1] == 'klo' or parameters[1] == 'muns':
+        return f'Yuki Kaizuka\n' \
+               f'{random.choice(var.pic_collection.k)}'
+
+    if parameters[1] == 'klocke':
         return f'Klocke 4 eva\n' \
                f'{random.choice(var.pic_collection.m)}'
 
@@ -292,12 +189,52 @@ def get_waifu(parameters):
         return f'FrostNova\n' \
                f'{random.choice(var.pic_collection.y)}'
 
-    if parameters[1] == 'lauri':
+    if parameters[1] == 'lauri' or parameters[1] == 'laurii':
         return f'RIP Teddy D:\n' \
                f'{random.choice(var.pic_collection.l)}'
 
     if parameters[1] == 'flocke' or parameters[1] == 'flo':
         return f'Hinata Hyuuga\n' \
                f'{random.choice(var.pic_collection.f)}'
-
     return "Ask master MunsKlo for creating an instance for your waifu"
+
+
+def get_husbando(parameters):
+    parameters[1] = parameters[1].lower()
+
+    if parameters[1] == 'nici':
+        return f'Yato\n' \
+               f'{random.choice(var.pic_collection.n)}'
+
+    if parameters[1] == 'lauri' or parameters[1] == 'laurii':
+        numb = random.choice([1, 2])
+        if numb == 1:
+            return f'Aiji Yanagi\n' \
+                   f'{random.choice(var.pic_collection.lha)}'
+        return f'Souji Okita\n' \
+               f'{random.choice(var.pic_collection.lhb)}'
+
+    return "Ask master MunsKlo for creating an instance for your husbando"
+
+
+def get_joke(parameters):
+    country = '?lang=de'
+
+    if len(parameters) > 1:
+        parameters[1] = parameters[1].lower()
+        if parameters[1] == 'en':
+            country = ''
+        if parameters[1] == 'fr':
+            country = '?lang=fr'
+
+    response = requests.get(f'https://v2.jokeapi.dev/joke/Any{country}')
+    json_dict = response.json()
+    joke = json_dict['setup']
+    solution = json_dict['delivery']
+    return f'{joke}\n' \
+           f'||{solution}||'
+
+def get_fact(parameters):
+    response = requests.get(f'https://uselessfacts.jsph.pl/random')
+
+

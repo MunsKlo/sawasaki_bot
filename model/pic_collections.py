@@ -5,3 +5,7 @@ class PicCollection:
         self.m = []
         self.l = []
         self.f = []
+        self.k = []
+        self.n = []
+        self.lha = []
+        self.lhb = []

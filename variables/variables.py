@@ -1,9 +1,7 @@
-important_messages = []
 users = []
 yt_vids = []
 
 users_file = 'users.json'
-important_messages_file = 'important_messages.json'
 yt_vids_file = 'yt_vids.json'
 msgs_file = 'msgs.json'
 quotes_file = "quotes.json"
@@ -41,23 +39,8 @@ helper = {
     ".members": "Coming soon",
     ".users": "Get a list of all users",
     ".users rand": "Get an user randomly",
-    ".@ <message>": "Create a important message",
-    ".@ clear": "Delete all important messages",
-    ".@ print": "Get all important messages",
     ".github": "Get the github link",
-    "note-system": "",
-    ".msg info": "Give you your current position and the note-system",
-    ".msg note <title": "Give you the content of the note",
-    ".msg titles": "Give you all the titles from your currently position",
-    ".msg new msg <title> <note>": "Create a new note in the note-system",
-    ".msg new cat <title>": "Create a new category in the note-system",
-    ".msg del msg <title>": "Remove the note from the note-system",
-    ".msg del cat <title>": "Remove the category from the note-system",
-    "IMPORTANT": '',
-    ".msg purge": "DELETE ALL THE CONTENT IN THE NOTE-SYSTEM",
 
 }
-
-msgs = {}
 
 quotes = []
