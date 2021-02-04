@@ -21,5 +21,7 @@ commandHandler = {
   'github': comFunc.get_github,
   'waifu': comFunc.get_waifu,
   'joke': comFunc.get_joke,
-  'husbando': comFunc.get_husbando
+  'husbando': comFunc.get_husbando,
+  'gif': comFunc.get_gif,
+  'point': comFunc.get_points,
 }

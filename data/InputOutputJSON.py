@@ -1,5 +1,5 @@
 import json
-import requests
+from variables import variables as var
 
 
 def write_json_file(objs, file_name, clear=False):

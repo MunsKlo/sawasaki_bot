@@ -1,6 +1,6 @@
-from model import user, important_message, yt_vid, quote
+from model import user, important_message, yt_vid, quote, riddle
 from variables import variables as var
-import glob
+import glob, random
 
 
 def get_command_from_content(text):
@@ -57,8 +57,33 @@ def check_if_user_register(name, list):
     return user_exist
 
 
-def create_new_user(author):
-    return user.User(author.id, str(author), author.mention)
+def is_member_in_list(id):
+    for member in var.users:
+        if str(member.discord.id) == id:
+            return True
+    return False
+
+
+def save_points():
+    text = ''
+    for index in range(len(var.users)):
+        text += f'{var.users[index].discord.id}${var.users[index].points};\n'
+    file = open(var.path_data + 'user_points', 'w')
+    file.write(text)
+
+
+def load_points():
+    file = open(var.path_data + 'user_points', 'r')
+    for line in file:
+        if line != '\n':
+            list_stuff = syntax_encoder(line)
+            set_points(list_stuff)
+
+
+def set_points(list_stuff):
+    for member in var.users:
+        if str(member.discord.id) == list_stuff[0]:
+            member.points = list_stuff[1]
 
 
 def convert_dict_in_obj_list(list_obj, type_obj):
@@ -135,131 +160,10 @@ def cut_decisions(decisions):
 
 
 def get_user(id):
-    for obj in var.users:
-        if id == obj.id:
-            return obj
+    for member in var.users:
+        if member.discord.id == id:
+            return member
     return 'ERROR'
-
-
-def get_cursor_target(current_user):
-    if len(current_user.msg_cursor):
-        return current_user.msg_cursor.split('/')
-    return ''
-
-
-def get_cursor(cursor_target):
-    cursor = var.msgs
-    for cursor_cat in cursor_target:
-        if cursor == var.msgs:
-            cursor = var.msgs[cursor_cat]
-        else:
-            cursor = cursor[cursor_cat]
-    return cursor
-
-
-def info_msg_dir(current_user):
-    return f'Your position {current_user.msg_cursor}\n' \
-           f'```' \
-           f'{var.msgs}' \
-           f'```'
-
-
-def create_category(cat, current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if cat in cursor:
-        return f'Der Name der Kategorie existiert bereits!\n' \
-               f'```{cat} : {cursor[cat]}```'
-
-    cursor[cat] = {}
-    return 'Kategorie wurde erfolgreich erstellt!'
-
-
-def delete_category(cat, current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if cat in cursor:
-
-        if type(cursor[cat]) == str:
-            return "Du kannst keinen Text mit dem 'del cat' Befehl löschen"
-
-        cursor.pop(cat)
-        return 'Kategorie wurde erfolgreich gelöscht'
-
-    return 'Something went wrong'
-
-
-def create_msg(title, txt, current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if title in cursor:
-        return f'Der Name der Kategorie existiert bereits!\n' \
-               f'```{title} : {cursor[title]}```'
-
-    cursor[title] = txt
-    return 'Text wurde erfolgreich erstellt und hinzugefügt!'
-
-
-def delete_msg(title, current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if title in cursor:
-
-        if type(cursor[title]) == dict:
-            return "Du kannst keine Ordner mit dem 'del msg' Befehl löschen"
-
-        cursor.pop(title)
-        return 'Text wurde erfolgreich gelöscht'
-    return 'Something went wrong'
-
-
-def set_user_cursor(next_cat, current_user):
-
-    if next_cat == '..':
-        current_user.msg_cursor_back()
-        return f'Your position: {current_user.msg_cursor}'
-
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if next_cat in cursor:
-        current_user.msg_cursor_next(next_cat)
-        return f'Your position: {current_user.msg_cursor}'
-    else:
-        return f'{next_cat} wurde nicht gefunden!'
-
-
-def get_note(title, current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    if title in cursor:
-        return f'```' \
-               f'Title: {title}\n' \
-               f'Note: {cursor[title]}' \
-               f'```'
-
-    return 'Notiz wurde nicht gefunden!'
-
-
-def get_titles(current_user):
-    cursor_target = get_cursor_target(current_user)
-    cursor = get_cursor(cursor_target)
-
-    titles = [title for title in cursor if type(cursor[title]) == str]
-
-    if not len(titles):
-        return 'Keine Notizen hier!'
-
-    return '\n'.join(titles)
-
-
-def set_cursor_to_begin():
-    [current_user.set_cursor_to_start() for current_user in var.users]
 
 
 def get_images(path):
@@ -267,5 +171,52 @@ def get_images(path):
     list_of_pics += glob.glob(path + '*.png')
     return list_of_pics
 
+
+def get_emoji(emojis, emoji_name):
+    for emoji in emojis:
+        if emoji.name == emoji_name:
+            return emoji
+    return 'ERROR'
+
+
+def get_channel(channels, channel_name):
+    for channel in channels:
+        if channel_name == channel.name:
+            return channel
+    return 'ERROR'
+
+
+def get_riddles(riddles_obj):
+    with open(var.path_data + 'questions', 'r') as file:
+        for line in file:
+            if len(line) and line != '\n':
+                current_riddle = create_riddle(line)
+                riddles_obj.riddles[current_riddle.cat].append(current_riddle)
+
+
+def create_riddle(line):
+    list_stuff = syntax_encoder(line)
+    return riddle.Riddle(list_stuff[0], list_stuff[1], list_stuff[2])
+
+
+def syntax_encoder(line):
+    list_stuff = []
+    word = ''
+
+    for char in line:
+        if char == ';':
+            list_stuff.append(word)
+            return list_stuff
+        if char == '$':
+            list_stuff.append(word)
+            word = ''
+            continue
+        word += char
+
+
+def get_riddle():
+    riddle_cat = var.riddleList.riddles[random.choice(var.riddleList.keys)]
+    current_riddle = random.choice(riddle_cat)
+    return current_riddle
 
 

@@ -1,3 +1,5 @@
+from model import riddle
+
 users = []
 yt_vids = []
 
@@ -10,6 +12,7 @@ pic_collection = {}
 
 #CheckStates
 path_data = ''
+path = ''
 
 yt_link = 'https://www.youtube.com/watch?'
 
@@ -43,4 +46,6 @@ helper = {
 
 }
 
-quotes = []
+riddleList = riddle.RiddleList()
+
+

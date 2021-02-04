@@ -1,4 +1,4 @@
-import random
+import random, time
 import requests
 from variables import variables as var
 from data import InputOutputJSON
@@ -6,7 +6,7 @@ from model import user, important_message, yt_vid, chuck_norris, quote
 from bot_logic import functions_bot
 
 
-def get_inspiro_pic(parameters):
+def get_inspiro_pic(parameters=[]):
     link = "http://inspirobot.me/api?generate=true"
     f = requests.get(link)
     imgurl = f.text
@@ -69,7 +69,7 @@ def get_users(parameters):
 
     if len(parameters) == 1:
         for obj in var.users:
-            text += obj.name + '\n'
+            text += (str(obj.discord.nick) if str(obj.discord.nick) != 'None' else obj.discord.name) + '\n'
         return text
 
     if parameters[1] == 'rand' and len(parameters) == 2:
@@ -234,7 +234,30 @@ def get_joke(parameters):
     return f'{joke}\n' \
            f'||{solution}||'
 
-def get_fact(parameters):
-    response = requests.get(f'https://uselessfacts.jsph.pl/random')
 
+def get_gif(parameters):
+    list_cats = ('slap', 'cuddle', 'pat', 'feed', 'hug')
+    url = 'https://cdn.nekos.life/v3/sfw/gif/'
+
+    if parameters[1] in list_cats:
+        while True:
+            numb = random.randint(1, 30)
+            new_url = f'{url}{parameters[1]}/{parameters[1]}_0{numb if numb > 9 else "0" + str(numb)}.gif'
+            result = requests.get(new_url)
+            if '200' in str(result):
+                break
+            time.sleep(3)
+        return new_url
+    return f'Parameter {parameters[1]} not found'
+
+
+def get_points(parameters):
+    current_user = functions_bot.get_user(parameters[0].author.id)
+
+    if current_user == 'ERROR':
+        return 'Something went wrong'
+
+    current_user.points = int(current_user.points) + 1
+    functions_bot.save_points()
+    return 'Punkt erfolgreich gegeben'
 
